@@ -11,6 +11,9 @@ import java.util.*;
 
 public abstract class AbstractCSharpCodegen extends DefaultCodegen implements CodegenConfig {
 
+    private String modelPrefix = "";
+    private String modelSuffix = "";
+
     protected boolean optionalAssemblyInfoFlag = true;
     protected boolean optionalProjectFileFlag = false;
     protected boolean optionalMethodArgumentFlag = true;
@@ -188,6 +191,14 @@ public abstract class AbstractCSharpCodegen extends DefaultCodegen implements Co
 
         if (additionalProperties.containsKey(CodegenConstants.RETURN_ICOLLECTION)) {
             setReturnICollection(Boolean.valueOf(additionalProperties.get(CodegenConstants.RETURN_ICOLLECTION).toString()));
+        }
+
+        if (additionalProperties.containsKey(CodegenConstants.MODEL_NAME_PREFIX)){
+            modelPrefix = (String) additionalProperties.get(CodegenConstants.MODEL_NAME_PREFIX);
+        }
+
+        if (additionalProperties.containsKey(CodegenConstants.MODEL_NAME_SUFFIX)){
+            modelSuffix = (String) additionalProperties.get(CodegenConstants.MODEL_NAME_SUFFIX);
         }
     }
 
@@ -467,7 +478,7 @@ public abstract class AbstractCSharpCodegen extends DefaultCodegen implements Co
 
     @Override
     public String toModelName(String name) {
-        name = sanitizeName(name);
+        name = sanitizeName(modelNamePrefix + name + modelNameSuffix);
 
         // model name cannot use reserved keyword, e.g. return
         if (reservedWords.contains(name)) {
