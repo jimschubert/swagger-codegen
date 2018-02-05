@@ -5,7 +5,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
+{{#supportsAsync}}
 using System.Threading.Tasks;
+{{/supportsAsync}}
 using System.IO;
 {{^netStandard}}
 {{^supportsUWP}}
@@ -361,6 +363,17 @@ namespace {{packageName}}.Client
                             responseCookies.Value, 
                             responseCookies.Path, 
                             responseCookies.Domain)
+                            {
+                                Comment = responseCookies.Comment,
+                                CommentUri = responseCookies.CommentUri,
+                                Discard = responseCookies.Discard,
+                                Expired = responseCookies.Expired,
+                                Expires = responseCookies.Expires,
+                                HttpOnly = responseCookies.HttpOnly,
+                                Port = responseCookies.Port,
+                                Secure = responseCookies.Secure,
+                                Version = responseCookies.Version
+                            }
                         );
                 }
             }
@@ -392,88 +405,68 @@ namespace {{packageName}}.Client
             {{/supportsAsync}}
             InterceptResponse(req, response);
 
-            var result = toApiResponse(response{{^supportsAsync}}, codec{{/supportsAsync}});
-            if (response.ErrorMessage != null)
-            {
-                result.ErrorText = response.ErrorMessage;
-            }
-
-            if (response.Cookies != null && response.Cookies.Count > 0)
-            {
-                if(result.Cookies == null) result.Cookies = new List<Cookie>();
-                foreach (var restResponseCookie in response.Cookies)
-                {
-                    var cookie = new Cookie(
-                        restResponseCookie.Name,
-                        restResponseCookie.Value,
-                        restResponseCookie.Path,
-                        restResponseCookie.Domain
-                    )
-                    {
-                        Comment = restResponseCookie.Comment,
-                        CommentUri = restResponseCookie.CommentUri,
-                        Discard = restResponseCookie.Discard,
-                        Expired = restResponseCookie.Expired,
-                        Expires = restResponseCookie.Expires,
-                        HttpOnly = restResponseCookie.HttpOnly,
-                        Port = restResponseCookie.Port,
-                        Secure = restResponseCookie.Secure,
-                        Version = restResponseCookie.Version
-                    };
-                    
-                    result.Cookies.Add(cookie);
-                }
-            }
+            var result = toApiResponse<T>(response{{^supportsAsync}}, codec{{/supportsAsync}});
             return result;
         }
         
         {{#supportsAsync}}
         #region IAsynchronousClient
+
+        /// <inheritdoc />
         public async Task<ApiResponse<T>> GetAsync<T>(string path, RequestOptions options, IReadableConfiguration configuration = null)
         {
             var config = configuration ?? GlobalConfiguration.Instance;
             return await Exec<T>(newRequest(HttpMethod.Get, path, options, config), config);
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponse<T>> PostAsync<T>(string path, RequestOptions options, IReadableConfiguration configuration = null)
         {
             var config = configuration ?? GlobalConfiguration.Instance;
             return await Exec<T>(newRequest(HttpMethod.Post, path, options, config), config);
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponse<T>> PutAsync<T>(string path, RequestOptions options, IReadableConfiguration configuration = null)
         {
             var config = configuration ?? GlobalConfiguration.Instance;
             return await Exec<T>(newRequest(HttpMethod.Put, path, options, config), config);
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponse<T>> DeleteAsync<T>(string path, RequestOptions options, IReadableConfiguration configuration = null)
         {
             var config = configuration ?? GlobalConfiguration.Instance;
             return await Exec<T>(newRequest(HttpMethod.Delete, path, options, config), config);
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponse<T>> HeadAsync<T>(string path, RequestOptions options, IReadableConfiguration configuration = null)
         {
             var config = configuration ?? GlobalConfiguration.Instance;
             return await Exec<T>(newRequest(HttpMethod.Head, path, options, config), config);
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponse<T>> OptionsAsync<T>(string path, RequestOptions options, IReadableConfiguration configuration = null)
         {
             var config = configuration ?? GlobalConfiguration.Instance;
             return await Exec<T>(newRequest(HttpMethod.Options, path, options, config), config);
         }
 
+        /// <inheritdoc />
         public async Task<ApiResponse<T>> PatchAsync<T>(string path, RequestOptions options, IReadableConfiguration configuration = null)
         {
             var config = configuration ?? GlobalConfiguration.Instance;
             return await Exec<T>(newRequest(HttpMethod.Patch, path, options, config), config);
         }
+
         #endregion IAsynchronousClient
         {{/supportsAsync}}
 
         #region ISynchronousClient
+
+        /// <inheritdoc />
         public ApiResponse<T> Get<T>(string path, RequestOptions options, IReadableConfiguration configuration = null)
         {
             {{#supportsAsync}}
@@ -485,6 +478,7 @@ namespace {{packageName}}.Client
             {{/supportsAsync}}
         }
 
+        /// <inheritdoc />
         public ApiResponse<T> Post<T>(string path, RequestOptions options, IReadableConfiguration configuration = null)
         {
             {{#supportsAsync}}
@@ -496,6 +490,7 @@ namespace {{packageName}}.Client
             {{/supportsAsync}}
         }
 
+        /// <inheritdoc />
         public ApiResponse<T> Put<T>(string path, RequestOptions options, IReadableConfiguration configuration = null)
         {
             {{#supportsAsync}}
@@ -507,6 +502,7 @@ namespace {{packageName}}.Client
             {{/supportsAsync}}
         }
 
+        /// <inheritdoc />
         public ApiResponse<T> Delete<T>(string path, RequestOptions options, IReadableConfiguration configuration = null)
         {
             {{#supportsAsync}}
@@ -518,6 +514,7 @@ namespace {{packageName}}.Client
             {{/supportsAsync}}
         }
 
+        /// <inheritdoc />
         public ApiResponse<T> Head<T>(string path, RequestOptions options, IReadableConfiguration configuration = null)
         {
             {{#supportsAsync}}
@@ -529,6 +526,7 @@ namespace {{packageName}}.Client
             {{/supportsAsync}}
         }
 
+        /// <inheritdoc />
         public ApiResponse<T> Options<T>(string path, RequestOptions options, IReadableConfiguration configuration = null)
         {
             {{#supportsAsync}}
@@ -540,6 +538,7 @@ namespace {{packageName}}.Client
             {{/supportsAsync}}
         }
 
+        /// <inheritdoc />
         public ApiResponse<T> Patch<T>(string path, RequestOptions options, IReadableConfiguration configuration = null)
         {
             {{#supportsAsync}}
@@ -550,6 +549,7 @@ namespace {{packageName}}.Client
             return Exec<T>(newRequest(HttpMethod.Patch, path, options, config), config);
             {{/supportsAsync}}
         }
+
         #endregion ISynchronousClient
     }
 }

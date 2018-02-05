@@ -111,7 +111,9 @@ namespace {{packageName}}.{{apiPackage}}
                 new {{packageName}}.Client.Configuration { BasePath = basePath }
             );
             this.Client = new {{packageName}}.Client.ApiClient(this.Configuration.BasePath);
+            {{#supportsAsync}}
             this.AsynchronousClient = new {{packageName}}.Client.ApiClient(this.Configuration.BasePath);
+            {{/supportsAsync}}
             this.ExceptionFactory = {{packageName}}.Client.Configuration.DefaultExceptionFactory;
         }
 
@@ -130,7 +132,9 @@ namespace {{packageName}}.{{apiPackage}}
                 configuration
             );
             this.Client = new {{packageName}}.Client.ApiClient(this.Configuration.BasePath);
+            {{#supportsAsync}}
             this.AsynchronousClient = new {{packageName}}.Client.ApiClient(this.Configuration.BasePath);
+            {{/supportsAsync}}
             ExceptionFactory = {{packageName}}.Client.Configuration.DefaultExceptionFactory;
         }
 

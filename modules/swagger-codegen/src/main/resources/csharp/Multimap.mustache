@@ -23,11 +23,13 @@ namespace {{packageName}}.Client
 
         #region Enumerators
 
+        /// <inheritdoc />
         public IEnumerator<KeyValuePair<T, IList<TValue>>> GetEnumerator()
         {
             return _dictionary.GetEnumerator();
         }
 
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _dictionary.GetEnumerator();
@@ -37,32 +39,38 @@ namespace {{packageName}}.Client
 
         #region Public Members
 
+        /// <inheritdoc />
         public void Add(KeyValuePair<T, IList<TValue>> item)
         {
             if (!TryAdd(item.Key, item.Value))
                 throw new InvalidOperationException("Could not add values to Multimap.");
         }
 
+        /// <inheritdoc />
         public void Clear()
         {
             _dictionary.Clear();
         }
 
+        /// <inheritdoc />
         public bool Contains(KeyValuePair<T, IList<TValue>> item)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public void CopyTo(KeyValuePair<T, IList<TValue>>[] array, int arrayIndex)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public bool Remove(KeyValuePair<T, IList<TValue>> item)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public int Count
         {
             get
@@ -71,6 +79,7 @@ namespace {{packageName}}.Client
             }
         }
 
+        /// <inheritdoc />
         public bool IsReadOnly
         {
             get
@@ -79,6 +88,7 @@ namespace {{packageName}}.Client
             }
         }
 
+        /// <inheritdoc />
         public void Add(T key, IList<TValue> value)
         {
             if (value != null && value.Count > 0)
@@ -97,22 +107,26 @@ namespace {{packageName}}.Client
             }
         }
 
+        /// <inheritdoc />
         public bool ContainsKey(T key)
         {
             return _dictionary.ContainsKey(key);
         }
 
+        /// <inheritdoc />
         public bool Remove(T key)
         {
             IList<TValue> list;
             return TryRemove(key, out list);
         }
 
+        /// <inheritdoc />
         public bool TryGetValue(T key, out IList<TValue> value)
         {
             return _dictionary.TryGetValue(key, out value);
         }
 
+        /// <inheritdoc />
         public IList<TValue> this[T key]
         {
             get
@@ -122,6 +136,7 @@ namespace {{packageName}}.Client
             set { _dictionary[key] = value; }
         }
 
+        /// <inheritdoc />
         public ICollection<T> Keys
         {
             get
@@ -130,6 +145,7 @@ namespace {{packageName}}.Client
             }
         }
 
+        /// <inheritdoc />
         public ICollection<IList<TValue>> Values
         {
             get
@@ -138,6 +154,7 @@ namespace {{packageName}}.Client
             }
         }
 
+        /// <inheritdoc />
         public void CopyTo(Array array, int index)
         {
             ((ICollection) _dictionary).CopyTo(array, index);
