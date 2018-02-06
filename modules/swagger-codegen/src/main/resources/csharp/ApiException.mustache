@@ -47,6 +47,12 @@ namespace {{packageName}}.Client
             this.ErrorCode = errorCode;
             this.ErrorContent = errorContent;
         }
+
+        /// <inheritdoc />
+        public override String ToString()
+        {
+            return String.Format("[{0}] \"{1}\"", ErrorCode, Message);
+        }
     }
 
 }
